@@ -11,7 +11,13 @@ import org.springframework.hateoas.EntityModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController
@@ -23,7 +29,7 @@ public class FeedbackController {
     private FeedbackModelAssembler assembler;
 
     @GetMapping("/feedback")
-    CollectionModel<EntityModel<Feedback>> all() {
+    public CollectionModel<EntityModel<Feedback>> all() {
         List<EntityModel<Feedback>> feedback = repository.findAll().stream()
                 .map(assembler::toModel).collect(Collectors.toList());
 
@@ -31,10 +37,31 @@ public class FeedbackController {
                 linkTo(methodOn(FeedbackController.class).all()).withSelfRel());
     }
 
+    @PostMapping("/feedback")
+    public Feedback newFeedback(@RequestBody Feedback newFeedback) {
+        return repository.save(newFeedback);
+    }
+
+    @GetMapping("/formfeedback")
+    public ModelAndView formFeedbackView() {
+
+        return new ModelAndView("formfeedback");
+    }
+
+    @PostMapping("/formfeedback")
+    public String addFormFeedback(@RequestParam String product, 
+    @RequestParam String description, @RequestParam Integer rating) {
+        Feedback feedback = new Feedback(description, product, rating);
+        repository.save(feedback);
+        return "success";
+    }
+
+
+
     @GetMapping("/feedback/{id}")
-    EntityModel<Feedback> one(@PathVariable Long id) {
+    public EntityModel<Feedback> one(@PathVariable Long id) {
         Feedback feedback = repository.findById(id)
-            .orElseThrow(() -> new FeedbackNotFoundException(id));
+                .orElseThrow(() -> new FeedbackNotFoundException(id));
         return assembler.toModel(feedback);
     }
 }
