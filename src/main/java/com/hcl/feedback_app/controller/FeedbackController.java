@@ -6,6 +6,7 @@ import com.hcl.feedback_app.exception.FeedbackNotFoundException;
 import com.hcl.feedback_app.model.Feedback;
 import com.hcl.feedback_app.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties.View;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -44,8 +45,7 @@ public class FeedbackController {
 
     @GetMapping("/formfeedback")
     public ModelAndView formFeedbackView() {
-
-        return new ModelAndView("formfeedback");
+        return new ModelAndView("formfeedback", "feedback", new Feedback());
     }
 
     @PostMapping("/formfeedback")
@@ -53,7 +53,7 @@ public class FeedbackController {
     @RequestParam String description, @RequestParam Integer rating) {
         Feedback feedback = new Feedback(description, product, rating);
         repository.save(feedback);
-        return "success";
+        return ("redirect:/success");
     }
 
 
