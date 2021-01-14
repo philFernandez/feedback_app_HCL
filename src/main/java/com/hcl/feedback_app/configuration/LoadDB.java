@@ -1,4 +1,7 @@
 package com.hcl.feedback_app.configuration;
+/**
+ * @author Phil Fernandez
+ */
 
 import com.hcl.feedback_app.model.Feedback;
 import com.hcl.feedback_app.repository.FeedbackRepository;
@@ -16,7 +19,7 @@ public class LoadDB {
     CommandLineRunner initDB(FeedbackRepository repository) {
         return args -> {
             repository.save(new Feedback("The product was good", "Laptop", 5));
-            repository.save(new Feedback("The product was bad", "SimpliLearn", 1));
+            repository.save(new Feedback("The product was bad", "Android Phone", 1));
             repository.findAll() 
                 .forEach(feedback -> log.info("Preloaded " + feedback));
         };

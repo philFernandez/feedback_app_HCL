@@ -1,4 +1,7 @@
 package com.hcl.feedback_app.model;
+/**
+ * @author Phil Fernandez
+ */
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +23,7 @@ public class Feedback {
    private Long id; 
    private String description;
    private String product;
-   private int rating;
+   private Integer rating;
 
    public Feedback(String description, String product, int rating) {
        this.description = description;
